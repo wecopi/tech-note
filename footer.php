@@ -3,14 +3,36 @@
 </footer>
 <script src="https://cdn.bootcdn.net/ajax/libs/prism/1.29.0/prism.min.js"></script>
 <script>
-// 1. 复制功能逻辑
+// 1. 复制代码功能实地修复版
 document.querySelectorAll('pre').forEach((block) => {
+    // 检查是否已经存在按钮，防止重复创建
+    if (block.querySelector('.copy-btn')) return;
+
     const btn = document.createElement('button');
     btn.className = 'copy-btn';
     btn.innerText = '复制';
+    
     btn.onclick = function() {
-        const text = block.innerText.replace('复制', '').trim();
-        navigator.clipboard.writeText(text).then(() => {
+        // 排除掉按钮本身的文字，只获取代码内容
+        const codeElement = block.querySelector('code') || block;
+        const textToCopy = codeElement.innerText.replace('复制', '').trim();
+        
+        navigator.clipboard.writeText(textToCopy).then(() => {
+            btn.innerText = '成功!';
+            btn.style.background = '#27c93f';
+            setTimeout(() => { 
+                btn.innerText = '复制'; 
+                btn.style.background = 'var(--accent)';
+            }, 2000);
+        }).catch(err => {
+            console.error('复制失败:', err);
+            // 兼容性方案：如果是 HTTP 环境（非 HTTPS），clipboard 可能被禁
+            const textArea = document.createElement("textarea");
+            textArea.value = textToCopy;
+            document.body.appendChild(textArea);
+            textArea.select();
+            document.execCommand('copy');
+            textArea.remove();
             btn.innerText = '成功!';
             setTimeout(() => { btn.innerText = '复制'; }, 2000);
         });
@@ -18,16 +40,19 @@ document.querySelectorAll('pre').forEach((block) => {
     block.appendChild(btn);
 });
 
-// 2. 进度条与返回顶部
+// 2. 阅读进度条
 window.onscroll = function() {
     let winScroll = document.body.scrollTop || document.documentElement.scrollTop;
     let height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
     let scrolled = (winScroll / height) * 100;
-    if(document.getElementById("progress-bar")) document.getElementById("progress-bar").style.width = scrolled + "%";
-    if(document.getElementById("back-to-top")) document.getElementById("back-to-top").style.display = winScroll > 300 ? "flex" : "none";
+    const progress = document.getElementById("progress-bar");
+    if(progress) progress.style.width = scrolled + "%";
+    
+    const btt = document.getElementById("back-to-top");
+    if(btt) btt.style.display = winScroll > 300 ? "flex" : "none";
 };
 
-// 3. 自动生成目录 (TOC)
+// 3. 自动生成目录
 const tocContent = document.getElementById('toc-content');
 if (tocContent) {
     const hs = document.querySelectorAll('.post-content h2, .post-content h3');
@@ -41,29 +66,10 @@ if (tocContent) {
         html += '</ul>';
         tocContent.innerHTML = html;
     } else {
-        document.querySelectorAll('.widget-toc').forEach(el => el.style.display = 'none');
+        const widget = document.querySelector('.widget-toc');
+        if(widget) widget.style.display = 'none';
     }
 }
-
-// 4. 图片灯箱
-document.querySelectorAll('.post-content img').forEach(img => {
-    img.style.cursor = 'zoom-in';
-    img.onclick = function() {
-        const lb = document.getElementById('lightbox');
-        if(lb) {
-            lb.style.display = 'flex';
-            lb.querySelector('img').src = this.src;
-        }
-    };
-});
-if(document.getElementById('lightbox')) document.getElementById('lightbox').onclick = function() { this.style.display = 'none'; };
 if(document.getElementById('back-to-top')) document.getElementById('back-to-top').onclick = () => window.scrollTo({top: 0, behavior: 'smooth'});
-
-// 5. 模式切换
-if(document.getElementById('theme-toggle')) document.getElementById('theme-toggle').onclick = () => {
-    const r = document.documentElement;
-    const n = r.getAttribute('data-theme')==='dark'?'light':'dark';
-    r.setAttribute('data-theme',n); localStorage.setItem('theme',n);
-};
 </script>
 </body></html>
