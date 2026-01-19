@@ -174,3 +174,60 @@ pre::before { content: ""; position: absolute; top: 18px; left: 15px; width: 12p
     cursor: pointer;
     font-size: 14px;
 }
+
+/* --- 按钮深度美化方案 --- */
+
+/* 1. 展开全文按钮美化 */
+.fold-btn {
+    display: block;
+    width: 180px;
+    margin: 20px auto;
+    padding: 10px 0;
+    text-align: center;
+    background: var(--code-bg);
+    border: 1px solid var(--border);
+    border-radius: 25px; /* 圆角化 */
+    color: var(--accent);
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    box-shadow: 0 4px 6px rgba(0,0,0,0.05); /* 微弱投影 */
+    position: relative;
+    z-index: 10;
+}
+
+.fold-btn:hover {
+    background: var(--accent);
+    color: #fff !important;
+    transform: translateY(-2px); /* 悬浮感 */
+    box-shadow: 0 6px 12px rgba(0,0,0,0.1);
+}
+
+/* 2. 复制按钮美化 */
+.copy-btn {
+    position: absolute;
+    top: 8px;
+    right: 8px;
+    padding: 4px 12px;
+    background: rgba(255,255,255,0.1);
+    border: 1px solid rgba(255,255,255,0.2);
+    border-radius: 6px;
+    color: #ccc;
+    font-size: 12px;
+    cursor: pointer;
+    backdrop-filter: blur(4px); /* 毛玻璃效果 */
+    transition: all 0.2s;
+}
+
+.copy-btn:hover {
+    background: var(--accent);
+    color: #fff;
+    border-color: var(--accent);
+}
+
+/* 3. 优化折叠区域的渐变遮罩 */
+.post-content-collapsed::after {
+    height: 100px;
+    background: linear-gradient(transparent, var(--bg) 90%);
+}

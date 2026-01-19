@@ -39,7 +39,7 @@ function initCollapse() {
             
             const btn = document.createElement('div');
             btn.innerHTML = '↓ 展开全文';
-            btn.style = 'cursor:pointer; text-align:center; padding:10px; color:var(--accent); font-weight:bold;';
+            btn.className = 'fold-btn';
             
             btn.onclick = function() {
                 if (el.style.maxHeight === '280px') {
