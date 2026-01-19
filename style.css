@@ -29,3 +29,27 @@ pre::before { content: ""; position: absolute; top: 18px; left: 15px; width: 12p
 #progress-bar { position: fixed; top: 0; left: 0; width: 0; height: 3px; background: var(--accent); z-index: 9999; }
 #back-to-top { position: fixed; bottom: 30px; right: 30px; width: 45px; height: 45px; background: var(--accent); color: #fff; border-radius: 50%; display: none; align-items: center; justify-content: center; cursor: pointer; z-index: 999; }
 .post-content img { max-width: 100%; height: auto; border-radius: 8px; display: block; margin: 25px auto; cursor: zoom-in; }
+
+/* 回到顶部按钮样式修复 */
+#back-to-top {
+    position: fixed;
+    bottom: 30px;
+    right: 30px;
+    width: 50px;
+    height: 50px;
+    background: var(--accent);
+    color: #fff !important;
+    border-radius: 50%;
+    display: none; /* 初始隐藏，由 JS 控制显示 */
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    z-index: 9999;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    font-size: 20px;
+    font-weight: bold;
+    transition: transform 0.2s;
+}
+#back-to-top:hover {
+    transform: scale(1.1);
+}

@@ -2,62 +2,76 @@
     &copy; <?php echo date('Y'); ?> <?php $this->options->title(); ?>
 </footer>
 
+<div id="back-to-top">↑</div>
+
 <script>
-// 兼容 IP 访问的强制复制函数
+// 1. 模式切换
+const themeToggle = document.getElementById('theme-toggle');
+if (themeToggle) {
+    themeToggle.addEventListener('click', () => {
+        const currentTheme = document.documentElement.getAttribute('data-theme');
+        const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+        document.documentElement.setAttribute('data-theme', newTheme);
+        localStorage.setItem('theme', newTheme);
+    });
+}
+
+// 2. 复制代码函数
 function doCopy(text, btn) {
     const textArea = document.createElement("textarea");
     textArea.value = text;
-    // 确保 textarea 不会出现在视觉范围内
     textArea.style.position = "fixed";
     textArea.style.left = "-9999px";
-    textArea.style.top = "0";
     document.body.appendChild(textArea);
-    textArea.focus();
     textArea.select();
-    
     try {
-        const successful = document.execCommand('copy');
-        if (successful) {
+        if (document.execCommand('copy')) {
             btn.innerText = '成功!';
             btn.style.background = '#27c93f';
-            setTimeout(() => {
-                btn.innerText = '复制';
-                btn.style.background = '#007bff';
-            }, 2000);
+            setTimeout(() => { btn.innerText = '复制'; btn.style.background = '#007bff'; }, 2000);
         }
-    } catch (err) {
-        console.error('无法复制', err);
-    }
+    } catch (err) { console.error('Copy failed', err); }
     document.body.removeChild(textArea);
 }
 
-// 初始化按钮
+// 3. 滚动监听
+window.onscroll = function() {
+    let winScroll = document.documentElement.scrollTop || document.body.scrollTop;
+    let height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+    let scrolled = (winScroll / height) * 100;
+    
+    // 进度条
+    const bar = document.getElementById("progress-bar");
+    if(bar) bar.style.width = scrolled + "%";
+    
+    // 回到顶部按钮显示/隐藏
+    const btt = document.getElementById("back-to-top");
+    if(btt) {
+        if (winScroll > 300) {
+            btt.style.display = "flex";
+        } else {
+            btt.style.display = "none";
+        }
+    }
+};
+
+// 4. 初始化
 document.addEventListener('DOMContentLoaded', function() {
+    // 注入复制按钮
     document.querySelectorAll('pre').forEach(pre => {
-        // 检查是否已有按钮
-        if (pre.querySelector('.copy-btn')) return;
-        
         pre.style.position = 'relative';
         const btn = document.createElement('button');
         btn.className = 'copy-btn';
         btn.innerText = '复制';
-        
-        btn.onclick = function() {
-            // 获取代码文本：排除按钮文字
-            let codeText = pre.innerText.replace('复制', '').trim();
-            doCopy(codeText, this);
-        };
+        btn.onclick = function() { doCopy(pre.innerText.replace('复制','').trim(), this); };
         pre.appendChild(btn);
     });
+    
+    // 回到顶部点击事件
+    const bttBtn = document.getElementById('back-to-top');
+    if(bttBtn) {
+        bttBtn.onclick = () => window.scrollTo({top: 0, behavior: 'smooth'});
+    }
 });
-
-// 进度条
-window.onscroll = function() {
-    let winScroll = document.documentElement.scrollTop;
-    let height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
-    let scrolled = (winScroll / height) * 100;
-    const bar = document.getElementById("progress-bar");
-    if(bar) bar.style.width = scrolled + "%";
-};
 </script>
 </body></html>
