@@ -4,78 +4,78 @@
 <div id="back-to-top">↑</div>
 
 <script>
-// --- 1. 黑暗模式切换 ---
+// 1. 模式切换逻辑
 const themeToggle = document.getElementById('theme-toggle');
 if (themeToggle) {
-    themeToggle.addEventListener('click', () => {
-        const currentTheme = document.documentElement.getAttribute('data-theme');
-        const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
-        document.documentElement.setAttribute('data-theme', newTheme);
-        localStorage.setItem('theme', newTheme);
-    });
+    themeToggle.onclick = () => {
+        const theme = document.documentElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+        document.documentElement.setAttribute('data-theme', theme);
+        localStorage.setItem('theme', theme);
+    };
 }
 
-// --- 2. 文章折叠功能 (针对首页列表) ---
-function initPostCollapse() {
-    // 仅在非文章详情页执行（如果有 .post-content 且是列表形态）
-    const posts = document.querySelectorAll('.post-item .post-content');
-    posts.forEach(post => {
-        if (post.innerText.length > 200) {
-            post.classList.add('post-item-collapse');
+// 2. 通用复制逻辑 (兼容内网/IP访问)
+function doCopy(text, btn) {
+    const input = document.createElement("textarea");
+    input.value = text;
+    document.body.appendChild(input);
+    input.select();
+    try {
+        document.execCommand('copy');
+        btn.innerText = '成功!';
+        setTimeout(() => { btn.innerText = '复制'; }, 2000);
+    } catch (err) { console.error('复制失败'); }
+    document.body.removeChild(input);
+}
+
+// 3. 文章折叠逻辑 (200字)
+function initCollapse() {
+    const contents = document.querySelectorAll('.post-content');
+    contents.forEach(el => {
+        if (el.innerText.length > 200) {
+            el.style.maxHeight = '280px';
+            el.style.overflow = 'hidden';
+            el.style.position = 'relative';
+            
             const btn = document.createElement('div');
-            btn.className = 'read-more-toggle';
-            btn.innerText = '↓ 展开阅读全文';
+            btn.innerHTML = '↓ 展开全文';
+            btn.style = 'cursor:pointer; text-align:center; padding:10px; color:var(--accent); font-weight:bold;';
+            
             btn.onclick = function() {
-                if (post.classList.contains('post-item-collapse')) {
-                    post.classList.remove('post-item-collapse');
-                    post.classList.add('post-item-expanded');
-                    this.innerText = '↑ 收起全文';
+                if (el.style.maxHeight === '280px') {
+                    el.style.maxHeight = 'none';
+                    this.innerHTML = '↑ 收起全文';
                 } else {
-                    post.classList.add('post-item-collapse');
-                    post.classList.remove('post-item-expanded');
-                    this.innerText = '↓ 展开阅读全文';
-                    window.scrollTo({top: post.offsetTop - 100, behavior: 'smooth'});
+                    el.style.maxHeight = '280px';
+                    this.innerHTML = '↓ 展开全文';
+                    el.scrollIntoView({behavior: "smooth"});
                 }
             };
-            post.after(btn);
+            el.after(btn);
         }
     });
 }
 
-// --- 3. 初始化 ---
-document.addEventListener('DOMContentLoaded', function() {
-    initPostCollapse(); // 执行折叠逻辑
-    
-    // 注入复制按钮
+document.addEventListener('DOMContentLoaded', () => {
+    initCollapse();
+    // 注入代码块复制按钮
     document.querySelectorAll('pre').forEach(pre => {
         pre.style.position = 'relative';
         const btn = document.createElement('button');
         btn.className = 'copy-btn';
         btn.innerText = '复制';
-        btn.onclick = function() {
-            const textArea = document.createElement("textarea");
-            textArea.value = pre.innerText.replace('复制','').trim();
-            document.body.appendChild(textArea);
-            textArea.select();
-            document.execCommand('copy');
-            document.body.removeChild(textArea);
-            btn.innerText = '成功!';
-            setTimeout(() => { btn.innerText = '复制'; }, 2000);
-        };
+        btn.onclick = function() { doCopy(pre.innerText.replace('复制','').trim(), this); };
         pre.appendChild(btn);
     });
-    
-    const bttBtn = document.getElementById('back-to-top');
-    if(bttBtn) bttBtn.onclick = () => window.scrollTo({top: 0, behavior: 'smooth'});
+    // 回到顶部
+    const btt = document.getElementById('back-to-top');
+    if(btt) btt.onclick = () => window.scrollTo({top: 0, behavior: 'smooth'});
 });
 
-window.onscroll = function() {
-    let winScroll = document.documentElement.scrollTop || document.body.scrollTop;
-    let height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
-    let scrolled = (winScroll / height) * 100;
-    if(document.getElementById("progress-bar")) document.getElementById("progress-bar").style.width = scrolled + "%";
+window.onscroll = () => {
+    const top = document.documentElement.scrollTop;
     const btt = document.getElementById("back-to-top");
-    if(btt) btt.style.display = winScroll > 300 ? "flex" : "none";
+    if(btt) btt.style.display = top > 300 ? "flex" : "none";
 };
 </script>
 </body></html>
