@@ -1,58 +1,31 @@
-/* Tech-Note 1.5 - 背景增强版 */
-:root { 
-    --bg: #ffffff; 
-    --text: #333; 
-    --border: #eee; 
-    --accent: #007bff; 
-    --code-bg: #f6f8fa;
-    --content-bg: rgba(255, 255, 255, 0.95); /* 内容区半透明 */
-}
+/* Tech-Note 1.6 - 回归极简纯净版 */
+:root { --bg: #ffffff; --text: #333; --border: #eee; --accent: #007bff; --code-bg: #f6f8fa; }
+[data-theme="dark"] { --bg: #0d1117; --text: #c9d1d9; --border: #30363d; --accent: #58a6ff; --code-bg: #161b22; }
 
-[data-theme="dark"] { 
-    --bg: #0d1117; 
-    --text: #c9d1d9; 
-    --border: #30363d; 
-    --accent: #58a6ff; 
-    --code-bg: #161b22;
-    --content-bg: rgba(13, 17, 23, 0.9); 
-}
+body { background: var(--bg); color: var(--text); font-family: -apple-system, sans-serif; margin: 0; transition: 0.3s; line-height: 1.7; }
+.container { max-width: 1100px; margin: 0 auto; padding: 0 20px; }
+.site-header { border-bottom: 1px solid var(--border); padding: 20px 0; background: var(--bg); }
+.header-flex { display: flex; justify-content: space-between; align-items: center; }
+.main-wrapper { display: flex; justify-content: space-between; padding: 40px 0; }
+#main { width: 72%; }
+#sidebar { width: 24%; padding-top: 10px; }
+@media (max-width: 768px) { .main-wrapper, .header-flex { display: block; } #main, #sidebar { width: 100% !important; } #sidebar { margin-top: 30px; } }
 
-body { 
-    /* 实地添加背景图或图案 */
-    background-color: var(--bg);
-    background-image: 
-        radial-gradient(circle at 2px 2px, var(--border) 1px, transparent 0);
-    background-size: 40px 40px; /* 类似网格坐标纸的效果 */
-    background-attachment: fixed;
-    color: var(--text); 
-    font-family: -apple-system, sans-serif; 
-    margin: 0; 
-    transition: 0.3s; 
-    line-height: 1.7; 
-}
-
-/* 核心修改：让主体内容区域有背景，并与底层背景图分离 */
-.container { 
-    max-width: 1100px; 
-    margin: 0 auto; 
-    padding: 0 20px; 
-}
-
-.main-wrapper { 
-    display: flex; 
-    justify-content: space-between; 
-    padding: 40px 20px;
-    background: var(--content-bg); /* 内容区底色 */
-    box-shadow: 0 0 20px rgba(0,0,0,0.05);
-    border-radius: 8px;
-    margin-top: 20px;
-    margin-bottom: 40px;
-}
-
-/* 剩下的表格、代码框样式保持不变... */
+/* 表格实地强化：确保边框清晰 */
 table { width: 100%; border-collapse: collapse; margin: 20px 0; overflow-x: auto; display: block; border: 1px solid var(--border); }
-table th, table td { border: 1px solid var(--border) !important; padding: 10px 15px; text-align: left; }
-pre { background: var(--code-bg) !important; padding: 45px 15px 15px; border-radius: 8px; position: relative; overflow-x: auto; border: 1px solid var(--border); }
-.copy-btn { position: absolute; top: 12px; right: 15px; padding: 5px 12px; background: var(--accent); color: #fff !important; border-radius: 4px; cursor: pointer; z-index: 100; font-weight: bold; }
+table th, table td { border: 1px solid var(--border) !important; padding: 12px; text-align: left; min-width: 120px; }
+table th { background: rgba(128,128,128,0.05); font-weight: bold; }
+
+/* 代码框：保持 MacOS 风格但背景纯净 */
+pre { background: var(--code-bg) !important; padding: 45px 15px 15px; border-radius: 8px; position: relative; overflow-x: auto; border: 1px solid var(--border); margin: 25px 0; }
+pre::before { content: ""; position: absolute; top: 18px; left: 15px; width: 12px; height: 12px; border-radius: 50%; background: #ff5f56; box-shadow: 20px 0 0 #ffbd2e, 40px 0 0 #27c93f; }
+.copy-btn { position: absolute; top: 12px; right: 15px; padding: 5px 12px; font-size: 12px; background: var(--accent); color: #fff !important; border-radius: 4px; cursor: pointer; z-index: 100; font-weight: bold; }
+
+/* 功能组件 */
+.side-title { font-size: 16px; margin: 25px 0 10px; color: var(--text); border-left: 4px solid var(--accent); padding-left: 10px; font-weight: bold; }
+.side-list { list-style: none; padding: 0; line-height: 2.5; font-size: 14px; }
+.side-list a { color: var(--text); text-decoration: none; opacity: 0.8; }
+.search-input { width: 100%; padding: 12px 18px; border: 1px solid var(--border); background: var(--code-bg); color: var(--text); border-radius: 25px; outline: none; box-sizing: border-box; }
 #progress-bar { position: fixed; top: 0; left: 0; width: 0; height: 3px; background: var(--accent); z-index: 9999; }
 #back-to-top { position: fixed; bottom: 30px; right: 30px; width: 45px; height: 45px; background: var(--accent); color: #fff; border-radius: 50%; display: none; align-items: center; justify-content: center; cursor: pointer; z-index: 999; }
+.post-content img { max-width: 100%; height: auto; border-radius: 8px; display: block; margin: 25px auto; cursor: zoom-in; }
