@@ -6,9 +6,11 @@
             <h1 style="color:var(--text); margin-top:0;"><?php $this->title() ?></h1>
             <div style="font-size:13px; color:#888; margin-bottom:20px;"><?php $this->date(); ?></div>
             <div id="toc-mobile" class="widget-toc" style="display:none;"></div>
-            <div class="post-content">
+            
+            <div class="post-content editormd-html-preview" id="post-content">
                 <?php $this->content(); ?>
             </div>
+            
         </article>
     </div>
     <div id="sidebar">
