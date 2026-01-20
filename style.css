@@ -1,4 +1,4 @@
-/* Tech-Note 1.6 - 终极纯净美化版 */
+/* Tech-Note 1.6 - 终极纯净美化版 (含 EditorMD & TOC 补丁) */
 :root { 
     --bg: #ffffff; --text: #333; --border: #eee; --accent: #007bff; 
     --code-bg: #f6f8fa; --nav-bg: #ffffff; 
@@ -11,7 +11,7 @@
 /* 基础样式 */
 body { background: var(--bg); color: var(--text); font-family: -apple-system, sans-serif; margin: 0; transition: 0.3s; line-height: 1.7; }
 .container { max-width: 1100px; margin: 0 auto; padding: 0 20px; }
-.site-header { border-bottom: 1px solid var(--border); padding: 20px 0; background: var(--nav-bg); position: sticky; top: 0; z-index: 1000; }
+.site-header { border-bottom: 1px solid var(--border); padding: 20px 0; background: var(--nav-bg) !important; position: sticky; top: 0; z-index: 1000; }
 .header-flex { display: flex; justify-content: space-between; align-items: center; }
 
 /* 布局控制 */
@@ -19,9 +19,27 @@ body { background: var(--bg); color: var(--text); font-family: -apple-system, sa
 #main { width: 72%; }
 #sidebar { width: 24%; padding-top: 10px; }
 
-/* 文章内容美化 (兼容 EditorMD) */
+/* 文章内容美化 & EditorMD 深度适配 */
 .post-content { font-size: 16px; word-wrap: break-word; }
+.post-content.editormd-html-preview {
+    background-color: transparent !important; /* 强制背景透明 */
+    padding: 0 !important;
+    color: inherit !important; /* 强制文字颜色继承主题 */
+}
 .post-content img { max-width: 100%; height: auto; border-radius: 8px; display: block; margin: 25px auto; cursor: zoom-in; }
+
+/* 文章目录 (TOC) 美化 */
+.widget-toc {
+    background: var(--code-bg);
+    padding: 15px;
+    border-radius: 8px;
+    border: 1px solid var(--border);
+    margin-bottom: 20px;
+}
+.widget-toc h3 { border-bottom: 1px solid var(--border); padding-bottom: 10px; margin-bottom: 10px; font-size: 15px; }
+#toc-content { font-size: 14px; line-height: 2; }
+#toc-content a { color: var(--text); text-decoration: none; opacity: 0.8; }
+#toc-content a:hover { color: var(--accent); opacity: 1; }
 
 /* 表格强化 */
 table { width: 100%; border-collapse: collapse; margin: 20px 0; overflow-x: auto; display: block; border: 1px solid var(--border); }
@@ -48,13 +66,6 @@ pre::before { content: ""; position: absolute; top: 18px; left: 15px; width: 12p
     border-radius: 6px; color: var(--text); font-size: 12px; cursor: pointer; transition: 0.2s;
 }
 .copy-btn:hover { background: var(--accent); color: #fff; }
-
-/* 折叠区域逻辑 */
-.post-content-collapsed { position: relative; max-height: 280px; overflow: hidden; transition: max-height 0.3s ease; }
-.post-content-collapsed::after {
-    content: ""; position: absolute; bottom: 0; left: 0; width: 100%; height: 100px;
-    background: linear-gradient(transparent, var(--bg) 95%); pointer-events: none;
-}
 
 /* 其他组件 */
 #progress-bar { position: fixed; top: 0; left: 0; width: 0; height: 3px; background: var(--accent); z-index: 9999; }
